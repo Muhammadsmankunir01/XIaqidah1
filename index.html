@@ -1,1967 +1,1095 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Pembelajaran Interaktif PAI & Budi Pekerti Kelas XI</title>
+    <title>Media Pembelajaran Interaktif PAI & Budi Pekerti Kelas XI - Muhammad Sholeh</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 CDN -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         /* ==========================================================================
-           1. CSS VARIABLES & THEME CONFIGURATION
+           1. RESET & VARIABLE CSS (GLASSMORPHISM & THEME)
            ========================================================================== */
         :root {
-            --primary: #0d9488;
-            --primary-hover: #0f766e;
-            --secondary: #0284c7;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --success: #10b981;
-            
-            --bg-base: #f0fdf4;
-            --bg-glass: rgba(255, 255, 255, 0.75);
-            --bg-card: rgba(255, 255, 255, 0.85);
-            --border-glass: rgba(255, 255, 255, 0.4);
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
-            --sidebar-width: 260px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary-color: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #1b5e20;
+            --accent-color: #ff9800;
+            --bg-gradient-light: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #121212 0%, #1a237e 100%);
+            --glass-bg-light: rgba(255, 255, 255, 0.75);
+            --glass-bg-dark: rgba(30, 30, 30, 0.75);
+            --glass-border-light: rgba(255, 255, 255, 0.4);
+            --glass-border-dark: rgba(255, 255, 255, 0.1);
+            --text-light: #2c3e50;
+            --text-dark: #f5f5f5;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --transition: all 0.3s ease;
         }
 
-        [data-theme="dark"] {
-            --bg-base: #0f172a;
-            --bg-glass: rgba(30, 41, 59, 0.75);
-            --bg-card: rgba(30, 41, 59, 0.85);
-            --border-glass: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        body.dark-mode {
+            background: var(--bg-gradient-dark) !important;
+            color: var(--text-dark) !important;
         }
 
-        /* ==========================================================================
-           2. GLOBAL STYLES & RESET
-           ========================================================================== */
+        body.dark-mode .glass-card,
+        body.dark-mode .sidebar,
+        body.dark-mode .header,
+        body.dark-mode .footer,
+        body.dark-mode .modal-content {
+            background: var(--glass-bg-dark) !important;
+            border-color: var(--glass-border-dark) !important;
+            color: var(--text-dark) !important;
+        }
+
+        body.dark-mode .nav-item,
+        body.dark-mode .breadcrumb-item,
+        body.dark-mode p,
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 {
+            color: var(--text-dark) !important;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            -webkit-user-select: none; /* Proteksi copy global */
+            user-select: none; /* Mencegah seleksi teks sesuai spesifikasi tidak bisa dicopy */
+        }
+
+        body {
+            background: var(--bg-gradient-light);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* Prevent Text Selection / Copying */
+        .no-copy {
+            -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
 
-        body {
-            background: var(--bg-base);
-            background-image: radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.15) 0px, transparent 50%),
-                              radial-gradient(at 100% 100%, rgba(2, 132, 199, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            transition: var(--transition);
-        }
-
-        /* Prevent Selection on Interactive Text */
-        .no-select {
-            -webkit-user-select: none !important;
-            user-select: none !important;
-        }
-
-        /* Glassmorphism Reusable Class */
-        .glass {
-            background: var(--bg-glass);
+        /* Glassmorphism Common Style */
+        .glass-card {
+            background: var(--glass-bg-light);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border-glass);
-            box-shadow: var(--shadow-glass);
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--border-glass);
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-glass);
+            border: 1px solid var(--glass-border-light);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 20px;
             transition: var(--transition);
-        }
-
-        .glass-card:hover {
-            transform: translateY(-3px);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
-            text-decoration: none;
-            color: white;
-            background: var(--primary);
-        }
-
-        .btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
-        }
-
-        .btn-secondary { background: var(--secondary); }
-        .btn-accent { background: var(--accent); color: #1e293b; }
-        .btn-danger { background: var(--danger); }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        .btn-outline:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Inputs */
-        .input-group {
-            margin-bottom: 1.2rem;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .input-control {
-            width: 100%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 10px;
-            border: 1px solid var(--border-glass);
-            background: rgba(255, 255, 255, 0.5);
-            color: var(--text-main);
-            outline: none;
-            transition: var(--transition);
-        }
-
-        [data-theme="dark"] .input-control {
-            background: rgba(15, 23, 42, 0.6);
-        }
-
-        .input-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
         }
 
         /* ==========================================================================
-           3. AUTH / LOGIN CONTAINER
+           2. LAYOUT (HEADER, SIDEBAR, CONTENT, FOOTER)
            ========================================================================== */
-        #login-container {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-base);
-            padding: 1rem;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            border-radius: var(--radius-lg);
-        }
-
-        .login-header {
-            margin-bottom: 2rem;
-        }
-
-        .login-header i {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        /* ==========================================================================
-           4. MAIN APP LAYOUT (Header, Sidebar, Content, Footer)
-           ========================================================================== */
-        #app-container {
-            display: none;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            height: 70px;
-            padding: 0 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .toggle-sidebar-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.4rem;
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
-        .brand-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .theme-toggle-btn {
-            background: transparent;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-main);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .theme-toggle-btn:hover {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            background: rgba(13, 148, 136, 0.1);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            color: var(--primary);
-        }
-
-        /* Sidebar & Main Area Wrapper */
-        .wrapper {
+        .app-container {
             display: flex;
             flex: 1;
             position: relative;
         }
 
-        /* Sidebar */
-        sidebar {
-            width: var(--sidebar-width);
-            position: fixed;
-            top: 70px;
-            bottom: 0;
-            left: 0;
-            z-index: 900;
-            padding: 1.5rem 1rem;
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            transition: var(--transition);
-            overflow-y: auto;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border-light);
         }
 
-        sidebar.collapsed {
-            transform: translateX(-100%);
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: inherit;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .btn-icon:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--glass-bg-light);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--glass-border-light);
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar.collapsed .nav-text,
+        .sidebar.collapsed .user-info {
+            display: none;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 1rem;
+            gap: 15px;
+            padding: 12px 16px;
             border-radius: 12px;
-            color: var(--text-main);
+            color: var(--text-light);
             text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: var(--transition);
             cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-color);
+            color: white !important;
         }
 
         .nav-item i {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             width: 24px;
             text-align: center;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background: var(--primary);
-            color: white;
-            transform: translateX(4px);
-        }
-
         /* Main Content */
-        main {
+        .main-content {
             flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
-            transition: var(--transition);
-            min-height: calc(100vh - 130px);
+            padding: 24px;
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
         }
 
-        main.expanded {
-            margin-left: 0;
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.85rem;
+            background: var(--glass-bg-light);
+            border-top: 1px solid var(--glass-border-light);
+            backdrop-filter: blur(10px);
+            margin-top: auto;
         }
 
-        /* Breadcrumb & Global Progress Bar */
+        /* Breadcrumb */
         .breadcrumb {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            color: #666;
         }
 
-        .global-progress-wrapper {
-            margin-bottom: 2rem;
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-        }
-
-        .progress-bar-bg {
-            height: 10px;
+        /* Progress Bar Belajar */
+        .learning-progress-container {
             width: 100%;
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+            height: 10px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
 
-        .progress-bar-fill {
+        .learning-progress-bar {
             height: 100%;
+            background: var(--primary-light);
             width: 0%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 10px;
-            transition: width 0.5s ease;
+            transition: width 0.4s ease;
         }
 
-        /* Views (Pages) */
-        .view-section {
-            display: none;
-            animation: fadeIn 0.4s ease-in-out;
+        /* ==========================================================================
+           3. LOGIN & USER PROFILE
+           ========================================================================== */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-gradient-light);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .view-section.active {
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
             display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(46, 125, 50, 0.4);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ==========================================================================
+           4. GAME DRAG & DROP & QUIZ COMPONENTS
+           ========================================================================== */
+        .drag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .drag-item {
+            padding: 10px 16px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            cursor: grab;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .drop-zone {
+            min-height: 80px;
+            border: 2px dashed #888;
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.3);
+            transition: var(--transition);
+        }
+
+        .drop-zone.hovered {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .timer-badge {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* Options for Quiz */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        /* ==========================================================================
+           5. UTILITIES (TOAST, MODAL, SCROLL TO TOP)
+           ========================================================================== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        #scroll-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            z-index: 99;
+        }
+
+        /* Modal Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Responsive Mobile First Adjustments */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 10px;
+            }
+            .sidebar.collapsed {
+                width: 100%;
+            }
+            .nav-text {
+                display: none;
+            }
+            .main-content {
+                padding: 15px;
+            }
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Footer */
-        footer {
-            margin-left: var(--sidebar-width);
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            transition: var(--transition);
-        }
-
-        footer.expanded {
-            margin-left: 0;
-        }
-
-        /* ==========================================================================
-           5. SPECIFIC VIEW DESIGNS
-           ========================================================================== */
-
-        /* Dashboard / Beranda */
-        .hero-banner {
-            padding: 2.5rem;
-            border-radius: var(--radius-lg);
-            background: linear-gradient(135deg, rgba(13, 148, 136, 0.9), rgba(2, 132, 199, 0.9)), url('https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&q=80&w=1000') center/cover;
-            color: white;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-banner h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-banner p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            max-width: 600px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
-            background: rgba(13, 148, 136, 0.15);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-        /* Materi View */
-        .materi-tabs {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .tab-btn {
-            padding: 0.6rem 1.2rem;
-            border-radius: 10px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-main);
-            transition: var(--transition);
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .materi-content {
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .materi-content h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .materi-content ul {
-            margin-left: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .dalil-box {
-            background: rgba(13, 148, 136, 0.08);
-            border-left: 4px solid var(--primary);
-            padding: 1.2rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            font-style: italic;
-        }
-
-        .arabic-text {
-            font-size: 1.3rem;
-            text-align: right;
-            direction: rtl;
-            font-family: 'Amiri', 'Traditional Arabic', serif;
-            margin-bottom: 0.5rem;
-            line-height: 2;
-        }
-
-        /* Game Section (Drag and Drop) */
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .timer-badge {
-            background: var(--danger);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .dnd-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .dnd-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .dnd-source, .dnd-target {
-            min-height: 250px;
-            padding: 1rem;
-            border-radius: var(--radius-md);
-            border: 2px dashed var(--border-glass);
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .draggable-item {
-            padding: 0.8rem 1rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 10px;
-            cursor: grab;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-
-        .draggable-item:active {
-            cursor: grabbing;
-        }
-
-        .drop-zone {
-            padding: 1rem;
-            border-radius: 10px;
-            background: rgba(0,0,0,0.03);
-            border: 1px solid var(--border-glass);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* Quiz Components (Latihan & Evaluasi) */
-        .quiz-card {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .quiz-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .question-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .option-btn {
-            padding: 1rem 1.2rem;
-            border-radius: 12px;
-            border: 1px solid var(--border-glass);
-            background: var(--bg-card);
-            color: var(--text-main);
-            text-align: left;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .option-btn:hover {
-            border-color: var(--primary);
-            background: rgba(13, 148, 136, 0.05);
-        }
-
-        .option-btn.selected {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-        }
-
-        .option-btn.correct {
-            border-color: var(--success);
-            background: var(--success);
-            color: white;
-        }
-
-        .option-btn.wrong {
-            border-color: var(--danger);
-            background: var(--danger);
-            color: white;
-        }
-
-        /* Result View */
-        .result-box {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .score-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            font-size: 2.5rem;
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(13, 148, 136, 0.3);
-        }
-
-        .score-circle span {
-            font-size: 0.8rem;
-            font-weight: 400;
-            opacity: 0.9;
-        }
-
-        /* Profile Penyusun */
-        .profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 1rem;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 3.5rem;
-            border: 4px solid var(--border-glass);
-            box-shadow: var(--shadow-glass);
-        }
-
-        /* Reference & Ringkasan */
-        .ref-list {
-            list-style: none;
-        }
-
-        .ref-list li {
-            padding: 0.8rem 0;
-            border-bottom: 1px solid var(--border-glass);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        /* ==========================================================================
-           6. UTILITY COMPONENTS (Toast, Modal, Floating Scroll Top)
-           ========================================================================== */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .toast {
-            padding: 0.8rem 1.2rem;
-            border-radius: 10px;
-            background: var(--bg-card);
-            color: var(--text-main);
-            box-shadow: var(--shadow-glass);
-            border-left: 4px solid var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 0.9rem;
-            animation: slideInRight 0.3s ease;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .scroll-top-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: var(--shadow-glass);
-            z-index: 900;
-            transition: var(--transition);
-        }
-
-        .scroll-top-btn:hover {
-            transform: translateY(-3px);
-        }
-
-        canvas#confetti-canvas {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* Modal / Popup */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 9500;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-card {
-            max-width: 500px;
-            width: 100%;
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-        }
-
-        /* Media Queries for Mobile Responsiveness */
-        @media (max-width: 992px) {
-            sidebar {
-                transform: translateX(-100%);
-            }
-            sidebar.active {
-                transform: translateX(0);
-            }
-            main, footer {
-                margin-left: 0 !important;
-            }
-        }
     </style>
 </head>
-<body>
-
-    <!-- Canvas Confetti -->
-    <canvas id="confetti-canvas"></canvas>
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container"></div>
-
-    <!-- Scroll To Top Button -->
-    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
-
-    <!-- Modal Popup Universal -->
-    <div class="modal-overlay" id="customModal">
-        <div class="glass-card modal-card">
-            <h3 id="modalTitle" style="margin-bottom: 0.8rem; color: var(--primary);">Judul Info</h3>
-            <p id="modalBody" style="margin-bottom: 1.5rem; font-size: 0.95rem;">Isi pesan modal...</p>
-            <div style="text-align: right;">
-                <button class="btn" onclick="closeModal()">Tutup</button>
-            </div>
-        </div>
-    </div>
+<body class="no-copy">
 
     <!-- ==========================================================================
-       7. AUTH / LOGIN SECTION
+       LOGIN SCREEN
        ========================================================================== -->
-    <div id="login-container">
-        <div class="glass-card login-card">
-            <div class="login-header">
-                <i class="fa-solid fa-book-quran"></i>
-                <h2>PAI & Budi Pekerti XI</h2>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.3rem;">
-                    Media Pembelajaran Interaktif Semester Ganjil
-                </p>
-            </div>
-            <form id="loginForm" onsubmit="handleLogin(event)">
-                <div class="input-group">
-                    <label><i class="fa-solid fa-user"></i> Nama Lengkap Siswa</label>
-                    <input type="text" id="loginNama" class="input-control" placeholder="Contoh: Ahmad Fauzi" required>
+    <div id="login-screen">
+        <div class="glass-card login-box">
+            <h2><i class="fas fa-book-quran"></i> Login Pembelajaran</h2>
+            <p style="font-size: 0.85rem; margin-bottom: 20px; color: #555;">PAI & Budi Pekerti Kelas XI - Semester Ganjil</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="student-name">Nama Siswa</label>
+                    <input type="text" id="student-name" class="form-control" placeholder="Masukkan nama Anda" required>
                 </div>
-                <div class="input-group">
-                    <label><i class="fa-solid fa-school"></i> Sekolah Asal</label>
-                    <input type="text" id="loginSekolah" class="input-control" placeholder="Contoh: SMAN 1 Kendal" required>
+                <div class="form-group">
+                    <label for="school-name">Sekolah Asal</label>
+                    <input type="text" id="school-name" class="form-control" placeholder="Contoh: SMAN 1 Pasuruan" required>
                 </div>
-                <div class="input-group">
-                    <label><i class="fa-solid fa-key"></i> PIN Akses (Default: 123456)</label>
-                    <input type="password" id="loginPin" class="input-control" placeholder="Masukkan PIN" required>
+                <div class="form-group">
+                    <label for="secret-pin">PIN Akses (Standar: 123456)</label>
+                    <input type="password" id="secret-pin" class="form-control" placeholder="Masukkan PIN" required>
                 </div>
-                <button type="submit" class="btn" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                    <i class="fa-solid fa-right-to-bracket"></i> Masuk Pembelajaran
-                </button>
+                <button type="submit" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Masuk Pembelajaran</button>
             </form>
         </div>
     </div>
 
     <!-- ==========================================================================
-       8. MAIN APPLICATION SECTION
+       MAIN HEADER
        ========================================================================== -->
-    <div id="app-container">
-        <!-- Header -->
-        <header class="glass">
-            <div class="header-left">
-                <button class="toggle-sidebar-btn" onclick="toggleSidebar()">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-                <div class="brand-title">
-                    <i class="fa-solid fa-mosque"></i>
-                    <span>PAI XI SMA</span>
-                </div>
-            </div>
-            <div class="header-right">
-                <button class="theme-toggle-btn" onclick="toggleTheme()" title="Ubah Tema">
-                    <i class="fa-solid fa-moon" id="themeIcon"></i>
-                </button>
-                <div class="user-badge">
-                    <i class="fa-solid fa-circle-user"></i>
-                    <span id="userDisplayName">Siswa</span>
-                </div>
-                <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="handleLogout()">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
-        </header>
-
-        <div class="wrapper">
-            <!-- Sidebar -->
-            <sidebar class="glass" id="sidebar">
-                <div class="nav-item active" onclick="switchView('beranda')">
-                    <i class="fa-solid fa-house"></i> <span>Beranda</span>
-                </div>
-                <div class="nav-item" onclick="switchView('petunjuk')">
-                    <i class="fa-solid fa-circle-info"></i> <span>Petunjuk</span>
-                </div>
-                <div class="nav-item" onclick="switchView('materi')">
-                    <i class="fa-solid fa-book-open"></i> <span>Materi Interaktif</span>
-                </div>
-                <div class="nav-item" onclick="switchView('game')">
-                    <i class="fa-solid fa-gamepad"></i> <span>Game Edukasi</span>
-                </div>
-                <div class="nav-item" onclick="switchView('latihan')">
-                    <i class="fa-solid fa-pen-to-square"></i> <span>Latihan Soal</span>
-                </div>
-                <div class="nav-item" onclick="switchView('evaluasi')">
-                    <i class="fa-solid fa-graduation-cap"></i> <span>Evaluasi</span>
-                </div>
-                <div class="nav-item" onclick="switchView('ringkasan')">
-                    <i class="fa-solid fa-list-check"></i> <span>Ringkasan</span>
-                </div>
-                <div class="nav-item" onclick="switchView('referensi')">
-                    <i class="fa-solid fa-bookmark"></i> <span>Referensi</span>
-                </div>
-                <div class="nav-item" onclick="switchView('profil')">
-                    <i class="fa-solid fa-id-card"></i> <span>Profil Penyusun</span>
-                </div>
-            </sidebar>
-
-            <!-- Main Content Area -->
-            <main id="mainContent">
-                <!-- Breadcrumb -->
-                <div class="breadcrumb">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span id="breadcrumbText">Beranda</span>
-                </div>
-
-                <!-- Global Progress Bar -->
-                <div class="glass-card global-progress-wrapper" style="padding: 1rem 1.5rem;">
-                    <div class="progress-info">
-                        <span><i class="fa-solid fa-chart-line"></i> Progres Pembelajaran Total</span>
-                        <span id="progressPercentText">0%</span>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="globalProgressBar"></div>
-                    </div>
-                </div>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 1: BERANDA
-                   ------------------------------------------------------------- -->
-                <section id="view-beranda" class="view-section active">
-                    <div class="hero-banner">
-                        <h1>Menjaga Martabat Manusia</h1>
-                        <p>Media Pembelajaran Interaktif PAI & Budi Pekerti Kelas XI - Memelihara Janji, Mensyukuri Nikmat, Memelihara Lisan, dan Menutup Aib Orang Lain.</p>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="glass-card stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-handshake"></i></div>
-                            <div>
-                                <h4 style="font-size:0.85rem; color: var(--text-muted);">Materi 1</h4>
-                                <strong style="font-size:1rem;">Menepati Janji</strong>
-                            </div>
-                        </div>
-                        <div class="glass-card stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-heart"></i></div>
-                            <div>
-                                <h4 style="font-size:0.85rem; color: var(--text-muted);">Materi 2</h4>
-                                <strong style="font-size:1rem;">Mensyukuri Nikmat</strong>
-                            </div>
-                        </div>
-                        <div class="glass-card stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-comment-slash"></i></div>
-                            <div>
-                                <h4 style="font-size:0.85rem; color: var(--text-muted);">Materi 3</h4>
-                                <strong style="font-size:1rem;">Memelihara Lisan</strong>
-                            </div>
-                        </div>
-                        <div class="glass-card stat-card">
-                            <div class="stat-icon"><i class="fa-solid fa-user-shield"></i></div>
-                            <div>
-                                <h4 style="font-size:0.85rem; color: var(--text-muted);">Materi 4</h4>
-                                <strong style="font-size:1rem;">Menutup Aib</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="glass-card">
-                        <h3 style="color: var(--primary); margin-bottom: 1rem;"><i class="fa-solid fa-bullseye"></i> Tujuan Pembelajaran</h3>
-                        <ul style="margin-left: 1.2rem; line-height: 1.8;">
-                            <li>Meyakini pentingnya menepati janji, mensyukuri nikmat, memelihara lisan, dan menutup aib orang lain dalam kehidupan sehari-hari.</li>
-                            <li>Merefleksikan pemahaman konsep yang berkaitan dengan menepati janji, mensyukuri nikmat, memelihara lisan, dan menutup aib orang lain dalam tindakan nyata kehidupan sehari-hari.</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 2: PETUNJUK
-                   ------------------------------------------------------------- -->
-                <section id="view-petunjuk" class="view-section">
-                    <div class="glass-card" style="margin-bottom: 1.5rem;">
-                        <h2 style="color: var(--primary); margin-bottom: 1rem;"><i class="fa-solid fa-circle-question"></i> Petunjuk Penggunaan Media</h2>
-                        <p style="margin-bottom: 1rem;">Petunjuk langkah demi langkah untuk memaksimalkan pengalaman belajar Anda:</p>
-                        
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <div style="display:flex; gap: 1rem; align-items: flex-start;">
-                                <div style="background: var(--primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">1</div>
-                                <div><strong>Pelajari Materi:</strong> Akses menu <i>Materi Interaktif</i>, baca penjelasan, dan cermati dalil-dalil Al-Qur'an serta Hadis.</div>
-                            </div>
-                            <div style="display:flex; gap: 1rem; align-items: flex-start;">
-                                <div style="background: var(--primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">2</div>
-                                <div><strong>Mainkan Game Edukasi:</strong> Asah kecerdasan secara interaktif dengan Game Drag & Drop (Durasi 1 menit tiap level soal).</div>
-                            </div>
-                            <div style="display:flex; gap: 1rem; align-items: flex-start;">
-                                <div style="background: var(--primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">3</div>
-                                <div><strong>Uji Latihan Soal:</strong> Kerjakan 20 soal latihan (terdiri atas soal HOTS & Standar) untuk mengukur pemahaman awal.</div>
-                            </div>
-                            <div style="display:flex; gap: 1rem; align-items: flex-start;">
-                                <div style="background: var(--primary); color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:bold;">4</div>
-                                <div><strong>Evaluasi Akhir:</strong> Selesaikan 20 soal evaluasi resmi untuk merekap pencapaian belajar akhir Anda.</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 3: MATERI INTERAKTIF
-                   ------------------------------------------------------------- -->
-                <section id="view-materi" class="view-section">
-                    <div class="materi-tabs">
-                        <button class="tab-btn active" onclick="switchMateriTab(0)">1. Menepati Janji</button>
-                        <button class="tab-btn" onclick="switchMateriTab(1)">2. Mensyukuri Nikmat</button>
-                        <button class="tab-btn" onclick="switchMateriTab(2)">3. Memelihara Lisan</button>
-                        <button class="tab-btn" onclick="switchMateriTab(3)">4. Menutup Aib</button>
-                    </div>
-
-                    <!-- Sub Materi 1 -->
-                    <div id="submateri-0" class="glass-card materi-content">
-                        <h3><i class="fa-solid fa-handshake"></i> Menepati Janji (Wafa' al-'Ahd)</h3>
-                        <p><strong>Pengertian:</strong> Menepati janji adalah mengakui dan melaksanakan sesuatu yang telah disepakati atau diucapkan, baik kepada Allah SWT maupun sesama manusia.</p>
-                        
-                        <div class="dalil-box">
-                            <div class="arabic-text">وَأَوْفُوا بِالْعَهْدِ ۖ إِنَّ الْعَهْدَ كَانَ مَسْئُولًا</div>
-                            <p><i>"Dan penuhilah janji, sesungguhnya janji itu pasti diminta pertanggungjawabannya."</i> (QS. Al-Isra' [17]: 34)</p>
-                        </div>
-
-                        <p><strong>Pembagian Janji:</strong></p>
-                        <ul>
-                            <li><strong>Janji kepada Allah SWT:</strong> Janji primordial ketika di alam ruh (mengakui Allah sebagai Tuhan) serta nazar.</li>
-                            <li><strong>Janji kepada Sesama Manusia:</strong> Komitmen dalam muamalah, kesepakatan kerja, dan pergaulan.</li>
-                        </ul>
-                        
-                        <p><strong>Dampak Menolak/Mengingkari Janji:</strong> Mengingkari janji merupakan salah satu tanda orang munafik sebagaimana dijelaskan dalam HR. Bukhari-Muslim.</p>
-                    </div>
-
-                    <!-- Sub Materi 2 -->
-                    <div id="submateri-1" class="glass-card materi-content" style="display:none;">
-                        <h3><i class="fa-solid fa-heart"></i> Mensyukuri Nikmat</h3>
-                        <p><strong>Pengertian:</strong> Syukur adalah ungkapan terima kasih kepada Allah SWT atas segala limpahan nikmat dengan cara menggunakannya sesuai kehendak Sang Pemberi Nikmat.</p>
-
-                        <div class="dalil-box">
-                            <div class="arabic-text">لَئِن شَكَرْتُمْ لأَزِيدَنَّكُمْ وَلَئِن كَفَرْتُمْ إِنَّ عَذَابِي لَشَدِيدٌ</div>
-                            <p><i>"Sesungguhnya jika kamu bersyukur, niscaya Aku akan menambah (nikmat) kepadamu, tetapi jika kamu mengingkari (nikmat-Ku), maka pasti azab-Ku sangat berat."</i> (QS. Ibrahim [14]: 7)</p>
-                        </div>
-
-                        <p><strong>3 Dimensi Mensyukuri Nikmat:</strong></p>
-                        <ul>
-                            <li><strong>Syukur dengan Hati (Bi al-Qalb):</strong> Meyakini sepenuhnya bahwa segala nikmat berasal dari Allah SWT.</li>
-                            <li><strong>Syukur dengan Lisan (Bi al-Lisan):</strong> Memperbanyak pujian (Alhamdulillah) dan zikir.</li>
-                            <li><strong>Syukur dengan Anggota Badan (Bi al-Arkan):</strong> Menggunakan potensi diri dan harta untuk ibadah serta kebaikan.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Sub Materi 3 -->
-                    <div id="submateri-2" class="glass-card materi-content" style="display:none;">
-                        <h3><i class="fa-solid fa-comment-slash"></i> Memelihara Lisan (Hifzh al-Lisan)</h3>
-                        <p><strong>Pengertian:</strong> Menjaga lisan dari perkataan haram atau tidak berguna seperti ghibah, fitnah, namimah (adu domba), dan berdusta.</p>
-
-                        <div class="dalil-box">
-                            <div class="arabic-text">مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ</div>
-                            <p><i>"Barangsiapa beriman kepada Allah dan hari akhir, hendaklah ia berkata yang baik atau diam."</i> (HR. Bukhari dan Muslim)</p>
-                        </div>
-
-                        <p><strong>Bahaya Bahaya Lisan di Era Digital:</strong> Dalam konteks modern, "lisan" mencakup pula tulisan, komentar, dan unggahan di media sosial. Hoaks dan ujaran kebencian merupakan bentuk pelanggaran hifzh al-lisan.</p>
-                    </div>
-
-                    <!-- Sub Materi 4 -->
-                    <div id="submateri-3" class="glass-card materi-content" style="display:none;">
-                        <h3><i class="fa-solid fa-user-shield"></i> Menutup Aib Orang Lain (Sitr al-'Aurbah)</h3>
-                        <p><strong>Pengertian:</strong> Merahasiakan cacat, keburukan, atau kekhilafan saudaranya sesama muslim dari pengetahuan publik.</p>
-
-                        <div class="dalil-box">
-                            <div class="arabic-text">وَمَنْ سَتَرَ مُسْلِمًا سَتَرَهُ اللَّهُ فِي الدُّنْيَا وَالْآخِرَةِ</div>
-                            <p><i>"Barangsiapa menutup aib seorang muslim, Allah akan menutup aibnya di dunia dan di akhirat."</i> (HR. Muslim)</p>
-                        </div>
-
-                        <p><strong>Klasifikasi Aib:</strong></p>
-                        <ul>
-                            <li><strong>Aib Zahir:</strong> Cacat fisik atau kesalahan yang terlihat langsung.</li>
-                            <li><strong>Aib Batin:</strong> Dosanya tidak diketahui umum, kecuali oleh dirinya dan Allah SWT. Mengumbar aib batin sangat dilarang keras.</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 4: GAME INTERAKTIF (DRAG AND DROP)
-                   ------------------------------------------------------------- -->
-                <section id="view-game" class="view-section">
-                    <div class="glass-card">
-                        <div class="game-header">
-                            <div>
-                                <h2><i class="fa-solid fa-gamepad"></i> Game Matching Moral (Level <span id="gameLevelDisplay">1</span>/10)</h2>
-                                <p style="font-size:0.85rem; color:var(--text-muted);">Tarik konsep di sebelah kiri dan pasangkan ke kotak deskripsi yang tepat di sebelah kanan!</p>
-                            </div>
-                            <div class="timer-badge">
-                                <i class="fa-solid fa-stopwatch"></i> Waktu: <span id="gameTimerText">60</span>s
-                            </div>
-                        </div>
-
-                        <div class="dnd-container no-select">
-                            <!-- Items to Drag -->
-                            <div class="dnd-source glass-card" id="dragSource">
-                                <h4>Pilihan Konsep</h4>
-                                <!-- Dynamic JS Cards -->
-                            </div>
-                            <!-- Target Drop Zones -->
-                            <div class="dnd-target glass-card" id="dropTarget">
-                                <h4>Target Pasangan</h4>
-                                <!-- Dynamic JS Targets -->
-                            </div>
-                        </div>
-
-                        <div style="display:flex; justify-shadow: space-between; justify-content: flex-end; gap: 1rem;">
-                            <button class="btn btn-accent" onclick="checkGameAnswers()"><i class="fa-solid fa-check"></i> Periksa Jawaban</button>
-                            <button class="btn" id="nextLevelBtn" style="display:none;" onclick="nextGameLevel()"><i class="fa-solid fa-forward"></i> Level Berikutnya</button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 5: LATIHAN SOAL (20 HOTS & Standar)
-                   ------------------------------------------------------------- -->
-                <section id="view-latihan" class="view-section">
-                    <div class="glass-card quiz-card" id="latihanContainer">
-                        <div class="quiz-meta">
-                            <span><i class="fa-solid fa-pen-to-square"></i> Latihan Soal</span>
-                            <span id="latihanNum">Soal 1 / 20</span>
-                        </div>
-                        <div class="question-text no-select" id="latihanQuestion">
-                            Memuat soal...
-                        </div>
-                        <div class="options-grid no-select" id="latihanOptions">
-                            <!-- Dynamic Options -->
-                        </div>
-                        <div style="display:flex; justify-content: space-between; align-items:center;">
-                            <button class="btn btn-outline" id="prevLatihanBtn" onclick="navigateQuiz('latihan', -1)" disabled>Sebelumnya</button>
-                            <button class="btn" id="nextLatihanBtn" onclick="navigateQuiz('latihan', 1)">Berikutnya</button>
-                        </div>
-                    </div>
-                    <!-- Latihan Result Container -->
-                    <div class="glass-card quiz-card result-box" id="latihanResult" style="display:none;">
-                        <h2>Hasil Latihan Soal</h2>
-                        <p style="color:var(--text-muted); margin-bottom: 1.5rem;">Terima kasih telah menyelesaikan seluruh latihan soal!</p>
-                        <div class="score-circle">
-                            <span id="latihanScoreText">0</span>
-                            <span>SKOR</span>
-                        </div>
-                        <p id="latihanFeedback" style="font-weight: 600; margin-bottom: 1.5rem;"></p>
-                        <button class="btn" onclick="resetQuiz('latihan')"><i class="fa-solid fa-rotate-right"></i> Coba Lagi</button>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 6: EVALUASI (20 HOTS & Standar)
-                   ------------------------------------------------------------- -->
-                <section id="view-evaluasi" class="view-section">
-                    <div class="glass-card quiz-card" id="evaluasiContainer">
-                        <div class="quiz-meta">
-                            <span><i class="fa-solid fa-graduation-cap"></i> Ujian Evaluasi</span>
-                            <span id="evaluasiNum">Soal 1 / 20</span>
-                        </div>
-                        <div class="question-text no-select" id="evaluasiQuestion">
-                            Memuat soal evaluasi...
-                        </div>
-                        <div class="options-grid no-select" id="evaluasiOptions">
-                            <!-- Dynamic Options -->
-                        </div>
-                        <div style="display:flex; justify-content: space-between; align-items:center;">
-                            <button class="btn btn-outline" id="prevEvaluasiBtn" onclick="navigateQuiz('evaluasi', -1)" disabled>Sebelumnya</button>
-                            <button class="btn" id="nextEvaluasiBtn" onclick="navigateQuiz('evaluasi', 1)">Berikutnya</button>
-                        </div>
-                    </div>
-                    <!-- Evaluasi Result Container -->
-                    <div class="glass-card quiz-card result-box" id="evaluasiResult" style="display:none;">
-                        <h2>Rekap Hasil Evaluasi</h2>
-                        <p style="color:var(--text-muted); margin-bottom: 1.5rem;">Nilai resmi ujian akhir Anda:</p>
-                        <div class="score-circle">
-                            <span id="evaluasiScoreText">0</span>
-                            <span>SKOR</span>
-                        </div>
-                        <p id="evaluasiFeedback" style="font-weight: 600; margin-bottom: 1.5rem;"></p>
-                        <button class="btn" onclick="resetQuiz('evaluasi')"><i class="fa-solid fa-rotate-right"></i> Ulangi Evaluasi</button>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 7: RINGKASAN
-                   ------------------------------------------------------------- -->
-                <section id="view-ringkasan" class="view-section">
-                    <div class="glass-card">
-                        <h2 style="color:var(--primary); margin-bottom:1rem;"><i class="fa-solid fa-list-check"></i> Rangkuman Inti Materi</h2>
-                        <div style="display:flex; flex-direction:column; gap:1.2rem;">
-                            <div style="border-left: 3px solid var(--primary); padding-left: 1rem;">
-                                <h4>1. Menepati Janji</h4>
-                                <p style="font-size:0.9rem; color:var(--text-muted);">Janji adalah hutang moral dan agama yang wajib dipenuhi. Mengingkari janji merusak kepercayaan sosial dan merupakan ciri keanekaragaman sifat nifak.</p>
-                            </div>
-                            <div style="border-left: 3px solid var(--secondary); padding-left: 1rem;">
-                                <h4>2. Mensyukuri Nikmat</h4>
-                                <p style="font-size:0.9rem; color:var(--text-muted);">Syukur direalisasikan melalui 3 pilar: pengakuan dalam hati, pengucapan dengan lisan, dan pembuktian melalui amal perbuatan positif.</p>
-                            </div>
-                            <div style="border-left: 3px solid var(--accent); padding-left: 1rem;">
-                                <h4>3. Memelihara Lisan</h4>
-                                <p style="font-size:0.9rem; color:var(--text-muted);">Ucapan dan tulisan di media sosial harus mencerminkan iman. Menjaga lisan dari ghibah, fitnah, dan dusta menyelamatkan seseorang dari dosa besar.</p>
-                            </div>
-                            <div style="border-left: 3px solid var(--success); padding-left: 1rem;">
-                                <h4>4. Menutup Aib Orang Lain</h4>
-                                <p style="font-size:0.9rem; color:var(--text-muted);">Menjaga martabat orang lain dengan tidak menyebarkan keburukan mereka menjamin perlindungan aib kita sendiri oleh Allah SWT di hari kiamat.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 8: REFERENSI
-                   ------------------------------------------------------------- -->
-                <section id="view-referensi" class="view-section">
-                    <div class="glass-card">
-                        <h2 style="color:var(--primary); margin-bottom:1rem;"><i class="fa-solid fa-bookmark"></i> Referensi & Sumber Rujukan</h2>
-                        <ul class="ref-list">
-                            <li><i class="fa-solid fa-book"></i> Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi RI. (2021). <i>Pendidikan Agama Islam dan Budi Pekerti SMA/SMK Kelas XI</i>. Jakarta: Pusat Kurikulum dan Perbukuan.</li>
-                            <li><i class="fa-solid fa-quran"></i> Al-Qur'an al-Karim dan Terjemahannya. Kementerian Agama Republik Indonesia.</li>
-                            <li><i class="fa-solid fa-scroll"></i> Kitab Shahih Al-Bukhari & Shahih Muslim (Matan Hadis Karakter dan Akhlak).</li>
-                            <li><i class="fa-solid fa-globe"></i> Rumah Belajar Kemendikbudristek & Platform Merdeka Mengajar (PMM).</li>
-                        </ul>
-                    </div>
-                </section>
-
-                <!-- -------------------------------------------------------------
-                   VIEW 9: PROFIL PENYUSUN
-                   ------------------------------------------------------------- -->
-                <section id="view-profil" class="view-section">
-                    <div class="glass-card profile-card">
-                        <div class="profile-img">
-                            <i class="fa-solid fa-user-tie"></i>
-                        </div>
-                        <div>
-                            <h2 style="color:var(--primary);">Muhammad Sholeh</h2>
-                            <p style="color:var(--text-muted); font-weight:500;">Guru Pendidikan Agama Islam & Budi Pekerti</p>
-                        </div>
-                        <div style="width:100%; text-align:left; font-size:0.9rem; margin-top:1rem; line-height: 1.8;">
-                            <p><strong><i class="fa-solid fa-building-columns"></i> Instansi:</strong> SMANSAKU</p>
-                            <p><strong><i class="fa-solid fa-layer-group"></i> Pengembang Tema:</strong> Muhammad Sholeh</p>
-                            <p><strong><i class="fa-solid fa-envelope"></i> Kontak:</strong> m.sholeh@smansaku.sch.id</p>
-                            <p><strong><i class="fa-solid fa-heart"></i> Misi:</strong> Mewujudkan media pembelajaran digital PAI yang interaktif, menyenangkan, dan berintegritas moral tinggi bagi siswa.</p>
-                        </div>
-                    </div>
-                </section>
-            </main>
+    <header class="header">
+        <div class="header-title">
+            <button class="btn-icon" id="toggle-sidebar"><i class="fas fa-bars"></i></button>
+            <h2>PAI & Budi Pekerti XI</h2>
         </div>
+        <div class="header-actions">
+            <button class="btn-icon" id="toggle-theme" title="Ubah Mode Dark/Light"><i class="fas fa-moon"></i></button>
+            <div id="user-display" style="font-size: 0.9rem; font-weight: 500;"></div>
+            <button class="btn-icon" id="btn-logout" title="Keluar"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </header>
 
-        <!-- Footer -->
-        <footer class="glass" id="appFooter">
-            &copy; 2026 Media Pembelajaran Interaktif PAI XI - Disusun oleh Muhammad Sholeh GPAI SMANSAKU. All Rights Reserved.
-        </footer>
+    <!-- ==========================================================================
+       APP CONTAINER (SIDEBAR & MAIN CONTENT)
+       ========================================================================== -->
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <a class="nav-item active" data-page="beranda"><i class="fas fa-home"></i><span class="nav-text">Beranda</span></a>
+            <a class="nav-item" data-page="petunjuk"><i class="fas fa-info-circle"></i><span class="nav-text">Petunjuk</span></a>
+            <a class="nav-item" data-page="materi"><i class="fas fa-book"></i><span class="nav-text">Materi</span></a>
+            <a class="nav-item" data-page="game"><i class="fas fa-gamepad"></i><span class="nav-text">Game</span></a>
+            <a class="nav-item" data-page="latihan"><i class="fas fa-pen-square"></i><span class="nav-text">Latihan</span></a>
+            <a class="nav-item" data-page="evaluasi"><i class="fas fa-clipboard-check"></i><span class="nav-text">Evaluasi</span></a>
+            <a class="nav-item" data-page="ringkasan"><i class="fas fa-file-alt"></i><span class="nav-text">Ringkasan</span></a>
+            <a class="nav-item" data-page="referensi"><i class="fas fa-bookmark"></i><span class="nav-text">Referensi</span></a>
+            <a class="nav-item" data-page="profil"><i class="fas fa-user-tie"></i><span class="nav-text">Profil</span></a>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Breadcrumb Navigation -->
+            <div class="breadcrumb">
+                <a onclick="navigateTo('beranda')">Utama</a> <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i> <span id="breadcrumb-current">Beranda</span>
+            </div>
+
+            <!-- Progress Belajar -->
+            <div class="learning-progress-container">
+                <div class="learning-progress-bar" id="learning-progress"></div>
+            </div>
+
+            <!-- SEKSI 1: BERANDA -->
+            <section id="page-beranda" class="page-section">
+                <div class="glass-card">
+                    <h1>Menghindari Perundungan, Perkelahian, dan Perjudian</h1>
+                    <p style="margin-top: 10px;">Selamat datang di Media Pembelajaran Interaktif Pendidikan Agama Islam dan Budi Pekerti untuk Kelas XI Semester Ganjil.</p>
+                </div>
+                <div class="glass-card">
+                    <h3><i class="fas fa-bullseye"></i> Tujuan Pembelajaran</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Mengidentifikasi macam-macam penyakit sosial (perundungan, perkelahian, perjudian).</li>
+                        <li>Menerapkan manfaat menghindari perundungan, perkelahian, dan perjudian dalam tindakan nyata sehari-hari.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SEKSI 2: PETUNJUK -->
+            <section id="page-petunjuk" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-directions"></i> Petunjuk Penggunaan</h2>
+                    <ol style="margin-left: 20px; margin-top: 15px; line-height: 1.8;">
+                        <li>Gunakan menu navigasi di sebelah kiri (atau atas pada perangkat mobile) untuk berpindah halaman.</li>
+                        <li>Pelajari <strong>Materi</strong> secara menyeluruh untuk memahami konsep bahaya penyakit sosial.</li>
+                        <li>Mainkan <strong>Game Drag & Drop</strong> (10 Level) dengan batas waktu 1 menit tiap soal.</li>
+                        <li>Kerjakan <strong>Latihan Soal</strong> (20 Soal) untuk menguji pemahaman awal Anda.</li>
+                        <li>Kerjakan <strong>Evaluasi</strong> akhir (20 Soal) untuk mengukur tingkat pencapaian belajar Anda.</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- SEKSI 3: MATERI INTERAKTIF -->
+            <section id="page-materi" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-book-open"></i> Materi Pembelajaran</h2>
+                    <br>
+                    <h3>1. Perundungan (Bullying)</h3>
+                    <p style="margin-top: 5px;">Perundungan adalah perilaku tidak menyenangkan baik secara verbal, fisik, maupun sosial di dunia nyata maupun dunia maya. Dalam Islam, perundungan sangat dilarang sebagaimana firman Allah SWT dalam QS. Al-Hujurat [49]: 11 yang melarang satu kaum mengolok-olok kaum yang lain.</p>
+                    <br>
+                    <h3>2. Perkelahian antar Pelajar</h3>
+                    <p style="margin-top: 5px;">Perkelahian/tawuran merupakan bentuk kekerasan fisik yang merusak persaudaraan (ukhuwah). Islam mengajarkan perdamaian dan penyelesaian masalah secara musyawarah, serta melarang merusak jiwa dan tubuh manusia (QS. Al-Ma'idah [5]: 32).</p>
+                    <br>
+                    <h3>3. Perjudian (Maysir)</h3>
+                    <p style="margin-top: 5px;">Perjudian adalah pertaruhan dengan menguntungkan satu pihak dan merugikan pihak lain berdasarkan kebetulan. Allah SWT secara tegas melarang perjudian bersamaan dengan khamar dalam QS. Al-Ma'idah [5]: 90 karena termasuk perbuatan keji dari syetan.</p>
+                </div>
+            </section>
+
+            <!-- SEKSI 4: GAME (DRAG & DROP) -->
+            <section id="page-game" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-gamepad"></i> Game Interaktif: Drag & Drop</h2>
+                    <p style="margin-bottom: 15px;">Cocokkan istilah dengan deskripsi yang tepat! Durasi: 60 detik per soal.</p>
+                    <div id="game-container">
+                        <div class="timer-badge" id="game-timer"><i class="fas fa-clock"></i> Waktu: 60s</div>
+                        <p id="game-level-indicator" style="font-weight: 600; margin-bottom: 10px;">Level 1 dari 10</p>
+                        <p id="game-question" style="font-size: 1.1rem; font-weight: 500; margin-bottom: 15px;"></p>
+                        <div class="drag-container" id="drag-items"></div>
+                        <div class="drop-zone" id="drop-target">Tarik dan Lepaskan Jawaban di Sini</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEKSI 5: LATIHAN SOAL -->
+            <section id="page-latihan" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-pen-square"></i> Latihan Soal (20 Soal)</h2>
+                    <div id="latihan-container">
+                        <p id="latihan-progress" style="font-weight: 600; margin-bottom: 10px;">Soal 1 dari 20</p>
+                        <h4 id="latihan-question" style="margin-bottom: 15px;"></h4>
+                        <div class="quiz-options" id="latihan-options"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEKSI 6: EVALUASI -->
+            <section id="page-evaluasi" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-clipboard-check"></i> Evaluasi Akhir (20 Soal)</h2>
+                    <div id="evaluasi-container">
+                        <p id="evaluasi-progress" style="font-weight: 600; margin-bottom: 10px;">Soal 1 dari 20</p>
+                        <h4 id="evaluasi-question" style="margin-bottom: 15px;"></h4>
+                        <div class="quiz-options" id="evaluasi-options"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEKSI 7: RINGKASAN -->
+            <section id="page-ringkasan" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-file-alt"></i> Ringkasan Materi</h2>
+                    <ul style="margin-left: 20px; margin-top: 15px; line-height: 1.8;">
+                        <li><strong>Perundungan</strong> merusak mental dan menyakiti sesama, bertentangan dengan QS. Al-Hujurat: 11.</li>
+                        <li><strong>Perkelahian</strong> menghancurkan ukhuwah islamiyah dan mengancam keselamatan jiwa.</li>
+                        <li><strong>Perjudian</strong> merusak tatanan ekonomi, mental, dan dilarang tegas dalam QS. Al-Ma'idah: 90.</li>
+                        <li>Manfaat menghindari ketiganya: menciptakan kedamaian, menjaga kehormatan diri, dan mendapat ridha Allah SWT.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SEKSI 8: REFERENSI -->
+            <section id="page-referensi" class="page-section" style="display:none;">
+                <div class="glass-card">
+                    <h2><i class="fas fa-bookmark"></i> Referensi</h2>
+                    <ul style="margin-left: 20px; margin-top: 15px; line-height: 1.8;">
+                        <li>Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi. (2021). <em>Buku Siswa PAI dan Budi Pekerti Kelas XI</em>. Jakarta: Kemendikbudristek.</li>
+                        <li>Al-Qur'an al-Karim dan Terjemahannya. Kementerian Agama Republik Indonesia.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SEKSI 9: PROFIL PENYUSUN -->
+            <section id="page-profil" class="page-section" style="display:none;">
+                <div class="glass-card" style="text-align: center;">
+                    <h2><i class="fas fa-user-tie"></i> Profil Penyusun</h2>
+                    <div style="margin-top: 20px;">
+                        <i class="fas fa-user-circle" style="font-size: 5rem; color: var(--primary-color);"></i>
+                        <h3 style="margin-top: 10px;">MS GPAI SMANSAKU</h3>
+                        <p style="color: #666;">Guru Pendidikan Agama Islam dan Budi Pekerti</p>
+                        <p style="margin-top: 10px;"><strong>Pengembang Theme:</strong> Muhammad Sholeh</p>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
     <!-- ==========================================================================
-       9. JAVASCRIPT SYSTEM ENGINE (FULL LOGIC)
+       FOOTER
+       ========================================================================== -->
+    <footer class="footer">
+        <p>&copy; 2026 Media Pembelajaran Interaktif PAI & Budi Pekerti XI. Developed by MS GPAI SMANSAKU.</p>
+    </footer>
+
+    <!-- Scroll To Top Button -->
+    <button class="btn-primary" id="scroll-top" style="width: auto; padding: 10px 15px; border-radius: 50%;"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Notifikasi</div>
+
+    <!-- Modal Popup Rekap -->
+    <div id="result-modal" class="modal">
+        <div class="glass-card modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 id="modal-title" style="text-align: center; margin-bottom: 15px;">Hasil Anda</h2>
+            <div id="modal-body" style="text-align: center; font-size: 1.1rem; line-height: 1.8;"></div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       JAVASCRIPT LOGIC (VANILLA JS)
        ========================================================================== -->
     <script>
         /* --------------------------------------------------------------------------
-         * GLOBAL CONFIGURATION & CONSTANTS
-         * -------------------------------------------------------------------------- */
-        const SECRET_PIN = "123456"; // PIN Standar Akses
-        
-        // Progress State Management
-        let appState = {
-            user: null,
-            progress: {
-                materiRead: [false, false, false, false],
-                gamePassed: false,
-                latihanDone: false,
-                evaluasiDone: false
+           KONFIGURASI & VARIABEL GLOBAL
+           -------------------------------------------------------------------------- */
+        const SECRET_PIN = "123456"; // PIN Standar Login
+        let currentUser = null;
+        let gameTimerInterval = null;
+        let currentGameLevel = 0;
+        let gameScore = 0;
+
+        let currentLatihanIdx = 0;
+        let latihanScore = 0;
+
+        let currentEvaluasiIdx = 0;
+        let evaluasiScore = 0;
+
+        /* Web Audio API Synthesizer (Tanpa file eksternal) */
+        const AudioFX = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
             },
-            game: {
-                currentLevel: 1,
-                timer: 60,
-                interval: null,
-                score: 0
+            playClick() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.05);
             },
-            latihan: {
-                answers: new Array(20).fill(null)
+            playCorrect() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.25);
             },
-            evaluasi: {
-                answers: new Array(20).fill(null)
+            playWrong() {
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(150, this.ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.2);
             }
         };
 
         /* --------------------------------------------------------------------------
-         * WEB AUDIO API SYNTHESIZER (Tanpa File Eksternal)
-         * -------------------------------------------------------------------------- */
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+           DATA SOAL & GAME
+           -------------------------------------------------------------------------- */
+        const gameData = [
+            { question: "Tindakan mengolok-olok nama orang tua teman tergolong...", items: ["Perundungan Verbal", "Perundungan Fisik", "Perjudian"], answer: "Perundungan Verbal" },
+            { question: "Memukul atau menendang teman secara sengaja tergolong...", items: ["Perundungan Fisik", "Perundungan Verbal", "Perjudian"], answer: "Perundungan Fisik" },
+            { question: "Memasang taruhan uang pada permainan sepak bola tergolong...", items: ["Perjudian", "Perkelahian", "Perundungan"], answer: "Perjudian" },
+            { question: "Adanya pertikaian antar kelompok pelajar di jalan umum disebut...", items: ["Perkelahian", "Perundungan Sosial", "Perjudian"], answer: "Perkelahian" },
+            { question: "QS. Al-Hujurat ayat 11 melarang umat Islam untuk...", items: ["Mengolok-olok", "Berkelahi", "Bermain Game"], answer: "Mengolok-olok" },
+            { question: "Larangan judi dan khamar dijelaskan secara tegas dalam Surat...", items: ["Al-Ma'idah: 90", "Al-Baqarah: 10", "An-Nisa: 5"], answer: "Al-Ma'idah: 90" },
+            { question: "Menyebarkan rumor atau fitnah untuk mengucilkan seseorang adalah...", items: ["Perundungan Relasional", "Perkelahian", "Sabar"], answer: "Perundungan Relasional" },
+            { question: "Istilah maysir dalam hukum Islam identik dengan...", items: ["Perjudian", "Perkelahian", "Perundungan"], answer: "Perjudian" },
+            { question: "Dampak utama dari perkelahian pelajar adalah merusak...", items: ["Ukhuwah", "Ekonomi", "Prestasi"], answer: "Ukhuwah" },
+            { question: "Menjauhi perbuatan yang sia-sia dan berbahaya merupakan ciri dari...", items: ["Akhlak Mahmudah", "Akhlak Mazmumah", "Perundungan"], answer: "Akhlak Mahmudah" }
+        ];
 
-        function playAudio(type) {
-            try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+        // Generator Soal (10 HOTS + 10 Biasa)
+        const quizData = [
+            // Soal 1-10 Biasa
+            { q: "1. Mengolok-olok teman dengan sebutan yang tidak disukainya termasuk bentuk perundungan...", opt: ["A. Fisik", "B. Verbal", "C. Cyber", "D. Non-verbal"], a: 1 },
+            { q: "2. Hukum melakukan perjudian dalam ajaran Islam adalah...", opt: ["A. Makruh", "B. Mubah", "C. Haram", "D. Sunnah"], a: 2 },
+            { q: "3. Ayat Al-Qur'an yang melarang sikap saling menghina dan mengolok-olok adalah...", opt: ["A. QS. Al-Hujurat: 11", "B. QS. Al-Ma'idah: 90", "C. QS. Al-Baqarah: 219", "D. QS. An-Nisa: 29"], a: 0 },
+            { q: "4. Perjudian dalam istilah fikih Islam dikenal dengan nama...", opt: ["A. Khamar", "B. Riba", "C. Maysir", "D. Nifaq"], a: 2 },
+            { q: "5. Salah satu dampak negatif dari perkelahian antar pelajar adalah...", opt: ["A. Mempererat persaudaraan", "B. Merusak fasilitas umum", "C. Meningkatkan nilai akademik", "D. Melatih keberanian positif"], a: 1 },
+            { q: "6. Mencegah teman yang hendak berkelahi merupakan kewajiban seorang muslim dalam hal...", opt: ["A. Amar ma'ruf nahi munkar", "B. Tawakal", "C. Tabligh", "D. Istiqamah"], a: 0 },
+            { q: "7. Mengabaikan atau mengucilkan teman dari kelompok termasuk dalam perundungan...", opt: ["A. Verbal", "B. Sosial/Relasional", "C. Fisik", "D. Digital"], a: 1 },
+            { q: "8. Sikap terbaik saat melihat tindakan perundungan di sekolah adalah...", opt: ["A. Membiarkannya", "B. Melaporkan ke guru", "C. Mengabadikan video", "D. Ikut tertawa"], a: 1 },
+            { q: "9. Islam melarang taruhan dalam permainan karena hal tersebut unsur dari...", opt: ["A. Perjudian", "B. Perkelahian", "C. Perundungan", "D. Perlombaan"], a: 0 },
+            { q: "10. Manfaat utama menghindari perkelahian dan perjudian adalah terciptanya...", opt: ["A. Permusuhan", "B. Kedamaian dan ketenteraman", "C. Kesenangan sesaat", "D. Kerugian finansial"], a: 1 },
 
-                if (type === 'click') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.05);
-                } else if (type === 'correct') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(150, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.25);
+            // Soal 11-20 HOTS
+            { q: "11. (HOTS) Ahmad melihat temannya diancam uang sakunya oleh kakak kelas. Tindakan Ahmad yang paling mencerminkan penerapan akhlak mulia adalah...", opt: ["A. Diam karena takut balasan", "B. Melaporkan secara bijak ke guru Bimbingan Konseling", "C. Membalas memukul kakak kelas tersebut", "D. Mengunggah kejadian tersebut di sosmed tanpa konfirmasi"], a: 1 },
+            { q: "12. (HOTS) Seseorang terbiasa membeli slot taruhan online dengan alasan hiburan. Menurut QS. Al-Ma'idah: 90, perbuatan tersebut merupakan...", opt: ["A. Kebiasaan wajar anak muda", "B. Perbuatan keji termasuk perbuatan syaitan", "C. Usaha mencari keberuntungan yang diizinkan", "D. Hiburan yang tidak berdampak dosa"], a: 1 },
+            { q: "13. (HOTS) Dampak psikologis jangka panjang yang dialami oleh korban perundungan secara konstan adalah...", opt: ["A. Menjadi lebih percaya diri", "B. Mengalami trauma dan penurunan kesehatan mental", "C. Menjadi lebih populer di sekolah", "D. Tidak memiliki pengaruh apa-apa"], a: 1 },
+            { q: "14. (HOTS) Analisis hubungan antara perkelahian pelajar dengan konsep ukhuwah Islamiyah adalah...", opt: ["A. Perkelahian memperkuat solidaritas kelompok", "B. Perkelahian merusak ikatan ukhuwah dan menanamkan dendam", "C. Perkelahian tidak ada hubungannya dengan agama", "D. Perkelahian adalah ajang pembuktian ukhuwah"], a: 1 },
+            { q: "15. (HOTS) Bagaimana solusi preventif terbaik untuk mengatasi fenomena judi online di kalangan remaja?", opt: ["A. Memperketat literasi digital dan pendidikan karakter berbasis Islam", "B. Memberikan uang saku lebih banyak", "C. Membiarkan siswa belajar dari kesalahan", "D. Mengisolasi siswa dari penggunaan internet sama sekali"], a: 0 },
+            { q: "16. (HOTS) Mengapa perjudian dinilai dapat merusak tatanan ekonomi masyarakat?", opt: ["A. Karena judi mengajarkan pola hidup hemat", "B. Karena judi mengandalkan kebetulan dan memicu kemiskinan", "C. Karena judi membutuhkan modal kecil", "D. Karena judi selalu memberikan keuntungan merata"], a: 1 },
+            { q: "17. (HOTS) Ketika terjadi perselisihan antar kelompok di sekolah, tindakan islami yang tepat berdasarkan prinsip musyawarah adalah...", opt: ["A. Melakukan perkelahian terbuka untuk menentukan pemenang", "B. Mengajak kedua pihak duduk bersama mediasi secara damai", "C. Mengabaikan perselisihan hingga membesar", "D. Mendukung salah satu kelompok secara buta"], a: 1 },
+            { q: "18. (HOTS) Seseorang merasa adiknya sering diejek secara fisik di sekolah. Langkah emosional yang terkontrol dan sesuai syariat adalah...", opt: ["A. Datang ke sekolah dan melabrak pelaku", "B. Menasihati adik agar sabar dan mengomunikasikan dengan pihak sekolah", "C. Mengajak kerabat untuk membalas ejekan", "D. Menyuruh adik membolos sekolah"], a: 1 },
+            { q: "19. (HOTS) Mengapa perundungan cyber (cyberbullying) seringkali dampaknya lebih masif dibanding perundungan fisik?", opt: ["A. Karena jejak digital sulit hilang dan dapat diakses publik luas", "B. Karena tidak menyakitkan secara fisik", "C. Karena dilakukan tanpa koneksi internet", "D. Karena korban tidak mengetahui identitasnya"], a: 0 },
+            { q: "20. (HOTS) Nilai utama yang terkandung dalam upaya meniadakan perundungan, perkelahian, dan perjudian di lingkungan sekolah adalah...", opt: ["A. Menciptakan iklim belajar yang aman, nyaman, dan berakhlakul karimah", "B. Menjaga nama baik pengurus sekolah semata", "C. Memenuhi formalitas tuntutan kurikulum", "D. Menghindari hukuman administratif dari pihak luar"], a: 0 }
+        ];
+
+        /* --------------------------------------------------------------------------
+           INITIALIZATION & EVENT LISTENERS
+           -------------------------------------------------------------------------- */
+        document.addEventListener("DOMContentLoaded", () => {
+            checkLogin();
+            setupEventListeners();
+            initGame();
+            renderLatihan();
+            renderEvaluasi();
+        });
+
+        function setupEventListeners() {
+            // Toast & Audio FX pada Klik
+            document.addEventListener("click", (e) => {
+                if (e.target.tagName === "BUTTON" || e.target.classList.contains("nav-item")) {
+                    AudioFX.playClick();
                 }
-            } catch (e) {
-                console.log('Audio error:', e);
-            }
+            });
+
+            // Login Submit
+            document.getElementById("login-form").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const name = document.getElementById("student-name").value;
+                const school = document.getElementById("school-name").value;
+                const pin = document.getElementById("secret-pin").value;
+
+                if (pin === SECRET_PIN) {
+                    currentUser = { name, school };
+                    localStorage.setItem("pai_user", JSON.stringify(currentUser));
+                    document.getElementById("login-screen").style.display = "none";
+                    updateUserDisplay();
+                    showToast("Login Berhasil! Selamat Belajar.");
+                } else {
+                    showToast("PIN Salah! Gunakan PIN Standar: 123456");
+                    AudioFX.playWrong();
+                }
+            });
+
+            // Logout
+            document.getElementById("btn-logout").addEventListener("click", () => {
+                localStorage.removeItem("pai_user");
+                location.reload();
+            });
+
+            // Theme Toggle
+            document.getElementById("toggle-theme").addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                const isDark = document.body.classList.contains("dark-mode");
+                document.getElementById("toggle-theme").innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            });
+
+            // Toggle Sidebar Mobile
+            document.getElementById("toggle-sidebar").addEventListener("click", () => {
+                document.getElementById("sidebar").classList.toggle("collapsed");
+            });
+
+            // Navigation Clicks
+            document.querySelectorAll(".nav-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+                    item.classList.add("active");
+                    const page = item.getAttribute("data-page");
+                    navigateTo(page);
+                });
+            });
+
+            // Scroll To Top
+            window.addEventListener("scroll", () => {
+                const btn = document.getElementById("scroll-top");
+                if (window.scrollY > 200) btn.style.display = "block";
+                else btn.style.display = "none";
+            });
+
+            document.getElementById("scroll-top").addEventListener("click", () => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            // Modal Close
+            document.getElementById("close-modal").addEventListener("click", () => {
+                document.getElementById("result-modal").style.display = "none";
+            });
         }
 
         /* --------------------------------------------------------------------------
-         * AUTHENTICATION LOGIC (Login & Logout)
-         * -------------------------------------------------------------------------- */
-        function handleLogin(e) {
-            e.preventDefault();
-            playAudio('click');
-            const nama = document.getElementById('loginNama').value.trim();
-            const sekolah = document.getElementById('loginSekolah').value.trim();
-            const pin = document.getElementById('loginPin').value.trim();
+           FUNKSI NAVIGASI & UTILITY
+           -------------------------------------------------------------------------- */
+        function checkLogin() {
+            const saved = localStorage.getItem("pai_user");
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                document.getElementById("login-screen").style.display = "none";
+                updateUserDisplay();
+            }
+        }
 
-            if (pin !== SECRET_PIN) {
-                showToast("PIN yang Anda masukkan salah!", "danger");
-                playAudio('wrong');
+        function updateUserDisplay() {
+            if (currentUser) {
+                document.getElementById("user-display").innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.name} (${currentUser.school})`;
+            }
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll(".page-section").forEach(sec => sec.style.display = "none");
+            const targetSection = document.getElementById(`page-${pageId}`);
+            if (targetSection) targetSection.style.display = "block";
+
+            document.getElementById("breadcrumb-current").innerText = pageId.charAt(0).toUpperCase() + pageId.slice(1);
+
+            // Update Progress Belajar
+            const pageMap = { "beranda": 10, "petunjuk": 20, "materi": 40, "game": 60, "latihan": 80, "evaluasi": 90, "ringkasan": 95, "referensi": 98, "profil": 100 };
+            document.getElementById("learning-progress").style.width = `${pageMap[pageId] || 10}%`;
+
+            if (pageId === "game") resetGameLevel();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 3000);
+        }
+
+        function showModal(title, content) {
+            document.getElementById("modal-title").innerText = title;
+            document.getElementById("modal-body").innerHTML = content;
+            document.getElementById("result-modal").style.display = "flex";
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+
+        /* --------------------------------------------------------------------------
+           GAME DRAG AND DROP (10 LEVEL + TIMER 60s)
+           -------------------------------------------------------------------------- */
+        function initGame() {
+            const dropTarget = document.getElementById("drop-target");
+
+            dropTarget.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                dropTarget.classList.add("hovered");
+            });
+
+            dropTarget.addEventListener("dragleave", () => {
+                dropTarget.classList.remove("hovered");
+            });
+
+            dropTarget.addEventListener("drop", (e) => {
+                e.preventDefault();
+                dropTarget.classList.remove("hovered");
+                const draggedText = e.dataTransfer.getData("text/plain");
+                checkGameAnswer(draggedText);
+            });
+        }
+
+        function resetGameLevel() {
+            currentGameLevel = 0;
+            gameScore = 0;
+            loadGameLevel();
+        }
+
+        function loadGameLevel() {
+            clearInterval(gameTimerInterval);
+            if (currentGameLevel >= gameData.length) {
+                showModal("Game Selesai!", `Selamat! Skor Game Anda: <strong>${gameScore * 10}</strong> / 100`);
                 return;
             }
 
-            appState.user = { nama, sekolah };
-            localStorage.setItem('pai_user', JSON.stringify(appState.user));
-            
-            showToast(`Selamat datang, ${nama}!`, "success");
-            playAudio('correct');
-            initApp();
-        }
+            const currentData = gameData[currentGameLevel];
+            document.getElementById("game-level-indicator").innerText = `Level ${currentGameLevel + 1} dari 10`;
+            document.getElementById("game-question").innerText = currentData.question;
 
-        function handleLogout() {
-            playAudio('click');
-            if (confirm("Apakah Anda yakin ingin keluar?")) {
-                localStorage.removeItem('pai_user');
-                location.reload();
-            }
-        }
+            const dragContainer = document.getElementById("drag-items");
+            dragContainer.innerHTML = "";
 
-        /* --------------------------------------------------------------------------
-         * THEME TOGGLE (Dark/Light Mode)
-         * -------------------------------------------------------------------------- */
-        function toggleTheme() {
-            playAudio('click');
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            html.setAttribute('data-theme', newTheme);
-            const icon = document.getElementById('themeIcon');
-            icon.className = newTheme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-            localStorage.setItem('pai_theme', newTheme);
-        }
-
-        /* --------------------------------------------------------------------------
-         * NAVIGATION & UI STATE MANAGEMENT
-         * -------------------------------------------------------------------------- */
-        function toggleSidebar() {
-            playAudio('click');
-            const sidebar = document.getElementById('sidebar');
-            const main = document.getElementById('mainContent');
-            const footer = document.getElementById('appFooter');
-            
-            sidebar.classList.toggle('collapsed');
-            main.classList.toggle('expanded');
-            footer.classList.toggle('expanded');
-        }
-
-        function switchView(viewName) {
-            playAudio('click');
-            // Hide all sections
-            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-
-            // Show selected view
-            const targetView = document.getElementById(`view-${viewName}`);
-            if (targetView) targetView.classList.add('active');
-
-            // Update Nav Item Active State
-            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(
-                item => item.getAttribute('onclick').includes(viewName)
-            );
-            if (activeNav) activeNav.classList.add('active');
-
-            // Update Breadcrumb
-            document.getElementById('breadcrumbText').innerText = viewName.charAt(0).toUpperCase() + viewName.slice(1);
-
-            // Trigger Specific View Initializers
-            if (viewName === 'game') initGameLevel(appState.game.currentLevel);
-            if (viewName === 'latihan') renderQuizQuestion('latihan', 0);
-            if (viewName === 'evaluasi') renderQuizQuestion('evaluasi', 0);
-
-            // Scroll Top Smooth
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function switchMateriTab(index) {
-            playAudio('click');
-            const tabs = document.querySelectorAll('.materi-tabs .tab-btn');
-            const contents = document.querySelectorAll('.materi-content');
-
-            tabs.forEach((tab, idx) => {
-                tab.classList.toggle('active', idx === index);
-            });
-
-            contents.forEach((content, idx) => {
-                content.style.display = idx === index ? 'block' : 'none';
-            });
-
-            // Update Progress Materi
-            appState.progress.materiRead[index] = true;
-            updateGlobalProgress();
-        }
-
-        /* --------------------------------------------------------------------------
-         * PROGRESS CALCULATOR
-         * -------------------------------------------------------------------------- */
-        function updateGlobalProgress() {
-            const totalTasks = 7; // 4 Submateri + 1 Game + 1 Latihan + 1 Evaluasi
-            let completed = 0;
-
-            completed += appState.progress.materiRead.filter(Boolean).length;
-            if (appState.progress.gamePassed) completed += 1;
-            if (appState.progress.latihanDone) completed += 1;
-            if (appState.progress.evaluasiDone) completed += 1;
-
-            const percentage = Math.round((completed / totalTasks) * 100);
-            document.getElementById('globalProgressBar').style.width = `${percentage}%`;
-            document.getElementById('progressPercentText').innerText = `${percentage}%`;
-
-            localStorage.setItem('pai_progress', JSON.stringify(appState.progress));
-        }
-
-        /* --------------------------------------------------------------------------
-         * GAME ENGINE (DRAG & DROP MATCHING - 10 LEVELS)
-         * -------------------------------------------------------------------------- */
-        const gameLevelsData = [
-            {
-                level: 1,
-                pairs: [
-                    { id: '1', concept: "Wafa' al-'Ahd", desc: "Istilah bahasa Arab untuk Menepati Janji" },
-                    { id: '2', concept: "Sitr al-'Aurbah", desc: "Upaya menjaga dan menutup aib saudaranya" }
-                ]
-            },
-            {
-                level: 2,
-                pairs: [
-                    { id: '1', concept: "Syukur Bi al-Lisan", desc: "Mengucapkan Alhamdulillah atas rezeki" },
-                    { id: '2', concept: "Hifzh al-Lisan", desc: "Menjaga lidah dari perkataan dusta/hoaks" }
-                ]
-            },
-            {
-                level: 3,
-                pairs: [
-                    { id: '1', concept: "Janji Primordial", desc: "Pengakuan ketuhanan Allah saat di alam ruh" },
-                    { id: '2', concept: "Nazar", desc: "Janji pribadi kepada Allah melakukan ibadah" }
-                ]
-            },
-            {
-                level: 4,
-                pairs: [
-                    { id: '1', concept: "Ghibah", desc: "Membicarakan keburukan orang lain yang tak disukai" },
-                    { id: '2', concept: "Namimah", desc: "Adu domba untuk merusak hubungan sesama" }
-                ]
-            },
-            {
-                level: 5,
-                pairs: [
-                    { id: '1', concept: "Aib Batin", desc: "Dosa tersembunyi yang hanya diketahui pelakunya & Allah" },
-                    { id: '2', concept: "Aib Zahir", desc: "Cacat atau keburukan yang terlihat nyata" }
-                ]
-            },
-            {
-                level: 6,
-                pairs: [
-                    { id: '1', concept: "Ciri Munafik", desc: "Mengingkari apabila berjanji" },
-                    { id: '2', concept: "Syukur Bi al-Arkan", desc: "Menggunakan badan untuk ibadah & amal saleh" }
-                ]
-            },
-            {
-                level: 7,
-                pairs: [
-                    { id: '1', concept: "QS. Al-Isra': 34", desc: "Dalil kewajiban menepati janji" },
-                    { id: '2', concept: "QS. Ibrahim: 7", desc: "Dalil ancaman bagi yang kufur nikmat" }
-                ]
-            },
-            {
-                level: 8,
-                pairs: [
-                    { id: '1', concept: "Tajassus", desc: "Mencari-cari kesalahan/aib orang lain" },
-                    { id: '2', concept: "Buhtan", desc: "Dusta besar atau fitnah keji tanpa bukti" }
-                ]
-            },
-            {
-                level: 9,
-                pairs: [
-                    { id: '1', concept: "Kufur Nikmat", desc: "Sikap mengingkari kebaikan dan nikmat Allah" },
-                    { id: '2', concept: "Syukur Bi al-Qalb", desc: "Meyakini sepenuh hati bahwa nikmat dari Allah" }
-                ]
-            },
-            {
-                level: 10,
-                pairs: [
-                    { id: '1', concept: "Pahala Menutup Aib", desc: "Allah akan menutup aibnya di hari kiamat" },
-                    { id: '2', concept: "Janji Muamalah", desc: "Kesepakatan jual beli/kontrak kerja sesama" }
-                ]
-            }
-        ];
-
-        let draggedItem = null;
-
-        function initGameLevel(lvl) {
-            clearInterval(appState.game.interval);
-            appState.game.timer = 60;
-            document.getElementById('gameTimerText').innerText = '60';
-            document.getElementById('gameLevelDisplay').innerText = lvl;
-            document.getElementById('nextLevelBtn').style.display = 'none';
-
-            const levelData = gameLevelsData[lvl - 1];
-            const sourceBox = document.getElementById('dragSource');
-            const targetBox = document.getElementById('dropTarget');
-
-            sourceBox.innerHTML = '<h4>Pilihan Konsep</h4>';
-            targetBox.innerHTML = '<h4>Target Pasangan</h4>';
-
-            // Shuffle concepts
-            const shuffledConcepts = [...levelData.pairs].sort(() => Math.random() - 0.5);
-            shuffledConcepts.forEach(p => {
-                const el = document.createElement('div');
-                el.className = 'draggable-item';
+            currentData.items.forEach(item => {
+                const el = document.createElement("div");
+                el.className = "drag-item";
+                el.innerText = item;
                 el.draggable = true;
-                el.dataset.id = p.id;
-                el.innerText = p.concept;
-
-                el.addEventListener('dragstart', (e) => {
-                    draggedItem = el;
-                    e.dataTransfer.setData('text/plain', p.id);
+                el.addEventListener("dragstart", (e) => {
+                    e.dataTransfer.setData("text/plain", item);
                 });
-
-                sourceBox.appendChild(el);
+                dragContainer.appendChild(el);
             });
 
-            // Target Zones
-            levelData.pairs.forEach(p => {
-                const zone = document.createElement('div');
-                zone.className = 'drop-zone';
-                zone.dataset.matchId = p.id;
-                zone.innerHTML = `<span>${p.desc}</span> <div class="slot" style="font-weight:bold; color:var(--primary);">[ Tarik Ke Sini ]</div>`;
-
-                zone.addEventListener('dragover', (e) => e.preventDefault());
-                zone.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    if (draggedItem) {
-                        zone.querySelector('.slot').innerText = draggedItem.innerText;
-                        zone.dataset.droppedId = draggedItem.dataset.id;
-                        playAudio('click');
-                    }
-                });
-
-                targetBox.appendChild(zone);
-            });
-
-            // Start Timer 1 Menit
-            appState.game.interval = setInterval(() => {
-                appState.game.timer--;
-                document.getElementById('gameTimerText').innerText = appState.game.timer;
-                if (appState.game.timer <= 0) {
-                    clearInterval(appState.game.interval);
-                    showToast("Waktu habis! Silakan coba level ini lagi.", "danger");
-                    playAudio('wrong');
-                    initGameLevel(lvl);
+            // Start Timer 60 Detik
+            let timeLeft = 60;
+            document.getElementById("game-timer").innerHTML = `<i class="fas fa-clock"></i> Waktu: ${timeLeft}s`;
+            gameTimerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById("game-timer").innerHTML = `<i class="fas fa-clock"></i> Waktu: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(gameTimerInterval);
+                    AudioFX.playWrong();
+                    showToast("Waktu Habis untuk level ini!");
+                    nextGameLevel();
                 }
             }, 1000);
         }
 
-        function checkGameAnswers() {
-            playAudio('click');
-            const zones = document.querySelectorAll('.drop-zone');
-            let allCorrect = true;
-
-            zones.forEach(zone => {
-                if (zone.dataset.droppedId !== zone.dataset.matchId) {
-                    allCorrect = false;
-                }
-            });
-
-            if (allCorrect) {
-                clearInterval(appState.game.interval);
-                playAudio('correct');
-                triggerConfetti();
-                showToast("Selamat! Jawaban Anda Benar Semua!", "success");
-
-                if (appState.game.currentLevel < 10) {
-                    document.getElementById('nextLevelBtn').style.display = 'inline-flex';
-                } else {
-                    appState.progress.gamePassed = true;
-                    updateGlobalProgress();
-                    showModal("Game Selesai!", "Luar biasa! Anda telah berhasil menyelesaikan seluruh 10 level Game Matching Moral.");
-                }
+        function checkGameAnswer(answer) {
+            clearInterval(gameTimerInterval);
+            const currentData = gameData[currentGameLevel];
+            if (answer === currentData.answer) {
+                AudioFX.playCorrect();
+                gameScore++;
+                showToast("Jawaban Benar!");
             } else {
-                playAudio('wrong');
-                showToast("Masih ada pasangan yang belum tepat. Periksa kembali!", "danger");
+                AudioFX.playWrong();
+                showToast("Jawaban Salah!");
             }
+            nextGameLevel();
         }
 
         function nextGameLevel() {
-            if (appState.game.currentLevel < 10) {
-                appState.game.currentLevel++;
-                initGameLevel(appState.game.currentLevel);
-            }
+            currentGameLevel++;
+            setTimeout(loadGameLevel, 1000);
         }
 
         /* --------------------------------------------------------------------------
-         * QUESTION BANK (20 LATIHAN & 20 EVALUASI - HOTS & STANDAR)
-         * -------------------------------------------------------------------------- */
-        const latihanQuestions = [
-            { q: "Roni berjanji kepada temannya untuk mengembalikan buku esok hari, tetapi lupa karena sibuk main game. Menurut ajaran Islam, tindakan Roni tergolong...", o: ["Memenuhi janji", "Perilaku nifak/munafik", "Sifat mukmin sejati", "Sifat takabbur"], a: 1 },
-            { q: "Seseorang yang senantiasa menepati janji akan memperoleh keutamaan di masyarakat berupa...", o: ["Kehormatan palsu", "Kepercayaan dan martabat tinggi", "Kekayaan materi berlipat", "Jabatan politis"], a: 1 },
-            { q: "Setiap manusia telah mengikat janji primordial dengan Allah SWT di alam ruh untuk...", o: ["Menjadi pemimpin bumi", "Mengakui Allah sebagai Tuhan", "Mencari harta sebanyaknya", "Menjauhi ikatan pernikahan"], a: 1 },
-            { q: "Berikut ini yang merupakan contoh bentuk syukur dengan lisan (Bi al-Lisan) adalah...", o: ["Bersedekah dengan harta", "Mengucapkan hamdalah setelah makan", "Meningkatkan ibadah shalat sunnah", "Membantu orang menyeberang jalan"], a: 1 },
-            { q: "Menggunakan pancaindera dan kesehatan tubuh untuk melakukan hal-hal positif merupakan wujud dari...", o: ["Syukur dengan hati", "Syukur dengan anggota badan", "Syukur dengan ucapan", "Kufur nikmat"], a: 1 },
-            { q: "Perhatikan QS. Ibrahim ayat 7! Janji Allah bagi orang yang mau mensyukuri nikmat-Nya adalah...", o: ["Ditambah nikmat-Nya", "Diberikan azab yang pedih", "Diampuni seluruh dosanya tanpa syarat", "Diberi umur panjang"], a: 0 },
-            { q: "Di media sosial, Fitri menemukan informasi yang meragukan tentang keburukan temannya. Sikap ihsan dalam memelihara lisan adalah...", o: ["Langsung membagikannya ke grup WA", "Mengabaikan dan tidak menyebarkannya", "Menambahkan bumbu cerita agar menarik", "Membalas dengan komentar pedas"], a: 1 },
-            { q: "Perintah diam jika tidak dapat berkata baik berdasarkan hadis Nabi SAW bertujuan untuk...", o: ["Menghindari perselisihan dan dosa lisan", "Menunjukkan sifat sombong", "Menutup diri dari pergaulan sosial", "Menghindari pertanyaaan guru"], a: 0 },
-            { q: "Apabila seseorang melihat cacat atau keburukan saudaranya yang tidak membahayakan umum, tindakan yang benar adalah...", o: ["Merekam dan mengunggahnya ke medsos", "Menutupinya dan menasihati secara rahasia", "Menceritalkannya kepada sahabat dekat", "Menjadikannya bahan tertawaan"], a: 1 },
-            { q: "Janji Allah bagi muslim yang menutupi aib saudaranya di dunia adalah...", o: ["Diberi kekayaan melimpah", "Ditutup aibnya oleh Allah di dunia dan akhirat", "Bebas dari perhitungan hisab", "Dijadikan pemimpin umat"], a: 1 },
-            { q: "Menyebarkan hoaks dan ujaran kebencian melalui jemari di media sosial termasuk pelanggaran dari prinsip...", o: ["Hifzh al-Mal", "Hifzh al-Lisan", "Hifzh al-Aql", "Hifzh ad-Din"], a: 1 },
-            { q: "Ungkapan 'Lisanmu adalah harimau-mu' sangat relevan dengan materi...", o: ["Menepati Janji", "Mensyukuri Nikmat", "Memelihara Lisan", "Menutup Aib"], a: 2 },
-            { q: "Berikut ini yang BUKAN merupakan dampak negatif dari menyebarkan aib orang lain adalah...", o: ["Merusak tali silaturahmi", "Menimbulkan fitnah dan perpecahan", "Meningkatkan derajat diri di mata Allah", "Mendapat dosa besar"], a: 2 },
-            { q: "Seseorang yang berjanji akan bersedekah jika lulus ujian dinamakan...", o: ["Janji Primordial", "Nazar", "Muamalah", "Ghibah"], a: 1 },
-            { q: "Meyakini dalam hati bahwa kesuksesan belajar adalah karunia Allah merupakan bentuk...", o: ["Syukur Bi al-Qalb", "Syukur Bi al-Lisan", "Syukur Bi al-Arkan", "Syukur Bi al-Mal"], a: 0 },
-            { q: "Membicarakan keburukan orang lain yang memang benar-benar terjadi dinamakan...", o: ["Fitnah", "Ghibah", "Namimah", "Buhtan"], a: 1 },
-            { q: "Menyampaikan berita bohong tentang orang lain yang tidak sesuai kenyataan disebut...", o: ["Ghibah", "Fitnah / Buhtan", "Namimah", "Riya'"], a: 1 },
-            { q: "Sikap orang yang tidak pernah merasa puas dan selalu mengeluh atas rezeki yang diterima tergolong...", o: ["Kufur nikmat", "Syukur nikmat", "Tawakal", "Qana'ah"], a: 0 },
-            { q: "Mengapa menepati janji sangat dianjurkan dalam bertransaksi ekonomi/bisnis?", o: ["Agar dipuji sebagai pengusaha sukses", "Menjaga kepercayaan dan integritas moral", "Menghindari pajak negara", "Mempercepat keuntungan berlipat"], a: 1 },
-            { q: "Cara merefleksikan pemahaman tentang menutup aib dalam kehidupan sekolah adalah...", o: ["Tidak mengungkit kesalahan kawan yang pernah dihukum", "Melaporkan semua rahasia teman ke media sosial", "Menyimpan dendam pribadi", "Menjauhi kawan yang pernah salah"], a: 0 }
-        ];
+           LATIHAN SOAL (20 SOAL)
+           -------------------------------------------------------------------------- */
+        function renderLatihan() {
+            if (currentLatihanIdx >= quizData.length) {
+                document.getElementById("latihan-container").innerHTML = `
+                    <h3>Latihan Selesai!</h3>
+                    <p style="margin-top:10px; font-size: 1.2rem;">Skor Latihan Anda: <strong>${(latihanScore / 20) * 100}</strong></p>
+                `;
+                return;
+            }
 
-        const evaluasiQuestions = [
-            { q: "[HOTS] Kakek memberikan uang saku lebih kepada Aris. Aris menyisihkan sebagian uang tersebut untuk ditabung dan disedekahkan ke panti asuhan. Tindakan Aris mencerminkan...", o: ["Syukur dengan lisan saja", "Syukur dengan harta dan perbuatan nyata", "Sifat boros dan pamer", "Upaya mencari pujian publik"], a: 1 },
-            { q: "[HOTS] Di sebuah grup media sosial, terjadi perdebatan hangat yang mengarah pada fitnah seseorang. Sebagai muslim yang memelihara lisan, langkah terbaik Anda adalah...", o: ["Meningkatkan eskalasi perdebatan", "Mengingatkan dengan santun atau keluar dari perdebatan unfaedah", "Ikut menyebarkan pesan ke grup lain", "Menonton dan memberi emoji tertawa"], a: 1 },
-            { q: "[HOTS] Andi mengetahui kawan sekelasnya pernah mencuri karena kelaparan di masa lalu, namun kini kawan tersebut telah bertaubat. Sikap Andi yang tepat adalah...", o: ["Menyebarkan cerita masa lalunya agar semua orang waspada", "Menutup rapat rahasia tersebut dan mendukung perubahannya", "Mengancam akan melaporkannya jika tidak diberi uang", "Menjauhinya secara terang-terangan"], a: 1 },
-            { q: "Kewajiban menepati janji ditegaskan dalam Al-Qur'an Surat...", o: ["Al-Isra' ayat 34", "Al-Baqarah ayat 286", "An-Nisa' ayat 1", "Al-Ma'idah ayat 100"], a: 0 },
-            { q: "Rasulullah SAW bersabda bahwa tanda-tanda orang munafik ada tiga, salah satunya adalah...", o: ["Jika dipercaya ia jujur", "Jika berjanji ia mengingkari", "Jika berkata ia selalu diam", "Jika beribadah ia khusyu'"], a: 1 },
-            { q: "Hukuman atau akibat buruk bagi orang yang mengumbar aib saudaranya adalah...", o: ["Dibenci masyarakat dan dibuka aibnya oleh Allah", "Mendapat kehormatan di dunia", "Diampuni dosanya", "Diberi kemudahan hidup"], a: 0 },
-            { q: "Berikut ini yang merupakan dimensi syukur paling mendasar adalah...", o: ["Hati (Pengakuan tulus)", "Lisan saja", "Anggota badan saja", "Pemberian hadiah"], a: 0 },
-            { q: "Menjaga lisan dari perkataan dusta saat ujian sekolah dapat diwujudkan dengan...", o: ["Tidak menyontek dan tidak memberi contekan", "Menyontek secara sembunyi-sembunyi", "Membawa catatan ringkas ke dalam kelas", "Pura-pura sakit"], a: 0 },
-            { q: "Sikap adu domba yang bertujuan merusak hubungan persaudaraan dalam Islam disebut...", o: ["Namimah", "Ghibah", "Riya'", "Hasad"], a: 0 },
-            { q: "Apabila kita terlanjur membuat janji kepada sesama manusia tetapi ada halangan darurat, maka tindakan beretika adalah...", o: ["Mengabaikan begitu saja", "Konfirmasi serta meminta maaf secara jujur", "Pura-pura lupa", "Pindah rumah"], a: 1 },
-            { q: "[HOTS] Dampak sosial utama jika masyarakat terbiasa memelihara lisan dan menutup aib adalah...", o: ["Terciptanya lingkungan harmonis dan saling percaya", "Munculnya kecurigaan antar warga", "Meningkatnya angka kriminalitas", "Penurunan pertumbuhan ekonomi"], a: 0 },
-            { q: "Mengucapkan kata-kata kotor saat marah merupakan bentuk pelanggaran dari...", o: ["Menepati janji", "Memelihara lisan", "Mensyukuri nikmat", "Menutup aib"], a: 1 },
-            { q: "Berikut yang TERMASUK janji manusia kepada Allah SWT adalah...", o: ["Nazar berpuasa jika lulus ujian", "Janji memberi hadiah teman", "Kontrak sewa rumah", "Kesepakatan kerja kelompok"], a: 0 },
-            { q: "Lisan yang tidak dijaga dapat melemparkan pemiliknya ke dalam...", o: ["Surga Firdaus", "Neraka", "Kenikmatan dunia", "Kebahagiaan hakiki"], a: 1 },
-            { q: "Aib yang timbul dari kemaksiatan pribadi yang tidak diketahui orang lain dinamakan...", o: ["Aib Zhir", "Aib Batin", "Aib Publik", "Aib Sosial"], a: 1 },
-            { q: "Orang yang mensyukuri nikmat ilmu pengetahuan akan...", o: ["Menyimpan ilmunya sendiri", "Mengamalkan dan mengajarkannya kepada orang lain", "Menggunakan ilmunya untuk menipu", "Sombong dengan gelar"], a: 1 },
-            { q: "Menepati janji dalam transaksi dagang akan mendatangkan...", o: ["Kerugian finansial", "Keberkahan dan kepercayaan pelanggan", "Kebangkrutan", "Sanksi hukum"], a: 1 },
-            { q: "Mengapa membicarakan kebaikan orang lain TIDAK termasuk ghibah?", o: ["Karena mempererat tali silaturahmi dan keteladanan", "Karena membosankan", "Karena dilarang agama", "Karena mengurangi pahala"], a: 0 },
-            { q: "Sikap orang mukmin ketika menerima ujian hidup adalah...", o: ["Tetap bersyukur dan bersabar", "Mengeluh di media sosial", "Mengingkari kebaikan Allah", "Putus asa"], a: 0 },
-            { q: "Sitr al-'Aurbah artinya adalah...", o: ["Menutupi aib", "Membuka rahasia", "Menepati janji", "Mensyukuri rezeki"], a: 0 }
-        ];
+            const data = quizData[currentLatihanIdx];
+            document.getElementById("latihan-progress").innerText = `Soal ${currentLatihanIdx + 1} dari 20`;
+            document.getElementById("latihan-question").innerText = data.q;
 
-        /* --------------------------------------------------------------------------
-         * QUIZ SYSTEM ENGINE (Latihan & Evaluasi)
-         * -------------------------------------------------------------------------- */
-        function renderQuizQuestion(type, index) {
-            const questions = type === 'latihan' ? latihanQuestions : evaluasiQuestions;
-            const answers = appState[type].answers;
+            const opts = document.getElementById("latihan-options");
+            opts.innerHTML = "";
 
-            const qText = document.getElementById(`${type}Question`);
-            const optsContainer = document.getElementById(`${type}Options`);
-            const numText = document.getElementById(`${type}Num`);
-
-            numText.innerText = `Soal ${index + 1} / ${questions.length}`;
-            qText.innerText = `${index + 1}. ${questions[index].q}`;
-
-            optsContainer.innerHTML = '';
-            questions[index].o.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                if (answers[index] === idx) btn.classList.add('selected');
-
-                btn.innerHTML = `<span style="width:25px; height:25px; border-radius:50%; background:rgba(0,0,0,0.05); display:inline-flex; align-items:center; justify-content:center; font-size:0.8rem;">${String.fromCharCode(65 + idx)}</span> ${opt}`;
-                
+            data.opt.forEach((optStr, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = optStr;
                 btn.onclick = () => {
-                    playAudio('click');
-                    appState[type].answers[index] = idx;
-                    renderQuizQuestion(type, index);
+                    if (idx === data.a) {
+                        AudioFX.playCorrect();
+                        latihanScore++;
+                        showToast("Benar!");
+                    } else {
+                        AudioFX.playWrong();
+                        showToast("Salah!");
+                    }
+                    currentLatihanIdx++;
+                    renderLatihan();
                 };
-
-                optsContainer.appendChild(btn);
+                opts.appendChild(btn);
             });
-
-            // Button Nav States
-            document.getElementById(`prev${type.charAt(0).toUpperCase() + type.slice(1)}Btn`).disabled = index === 0;
-            const nextBtn = document.getElementById(`next${type.charAt(0).toUpperCase() + type.slice(1)}Btn`);
-            
-            if (index === questions.length - 1) {
-                nextBtn.innerText = "Selesai & Rekap Score";
-                nextBtn.onclick = () => finishQuiz(type);
-            } else {
-                nextBtn.innerText = "Berikutnya";
-                nextBtn.onclick = () => navigateQuiz(type, 1);
-            }
-
-            // Store current index in dataset
-            document.getElementById(`${type}Container`).dataset.currentIndex = index;
         }
 
-        function navigateQuiz(type, direction) {
-            playAudio('click');
-            const container = document.getElementById(`${type}Container`);
-            let currentIndex = parseInt(container.dataset.currentIndex || 0);
-            currentIndex += direction;
-            
-            const questions = type === 'latihan' ? latihanQuestions : evaluasiQuestions;
-            if (currentIndex >= 0 && currentIndex < questions.length) {
-                renderQuizQuestion(type, currentIndex);
-            }
-        }
-
-        function finishQuiz(type) {
-            playAudio('click');
-            const questions = type === 'latihan' ? latihanQuestions : evaluasiQuestions;
-            const answers = appState[type].answers;
-
-            // Check if all answered
-            const unanswered = answers.filter(a => a === null).length;
-            if (unanswered > 0) {
-                if (!confirm(`Masih ada ${unanswered} soal yang belum dijawab. Yakin ingin mengumpulkan?`)) {
-                    return;
-                }
+        /* --------------------------------------------------------------------------
+           EVALUASI AKHIR (20 SOAL)
+           -------------------------------------------------------------------------- */
+        function renderEvaluasi() {
+            if (currentEvaluasiIdx >= quizData.length) {
+                const finalScore = (evaluasiScore / 20) * 100;
+                document.getElementById("evaluasi-container").innerHTML = `
+                    <h3>Evaluasi Selesai!</h3>
+                    <p style="margin-top:10px; font-size: 1.2rem;">Skor Evaluasi Akhir: <strong>${finalScore}</strong></p>
+                `;
+                showModal("Hasil Evaluasi Akhir", `Nama: <strong>${currentUser.name}</strong><br>Sekolah: <strong>${currentUser.school}</strong><br>Nilai Evaluasi: <strong>${finalScore}</strong>`);
+                return;
             }
 
-            // Calculate Score
-            let correct = 0;
-            questions.forEach((q, idx) => {
-                if (answers[idx] === q.a) correct++;
+            const data = quizData[currentEvaluasiIdx];
+            document.getElementById("evaluasi-progress").innerText = `Soal ${currentEvaluasiIdx + 1} dari 20`;
+            document.getElementById("evaluasi-question").innerText = data.q;
+
+            const opts = document.getElementById("evaluasi-options");
+            opts.innerHTML = "";
+
+            data.opt.forEach((optStr, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = optStr;
+                btn.onclick = () => {
+                    if (idx === data.a) {
+                        AudioFX.playCorrect();
+                        evaluasiScore++;
+                    } else {
+                        AudioFX.playWrong();
+                    }
+                    currentEvaluasiIdx++;
+                    renderEvaluasi();
+                };
+                opts.appendChild(btn);
             });
-
-            const score = Math.round((correct / questions.length) * 100);
-
-            // Hide Quiz, Show Result
-            document.getElementById(`${type}Container`).style.display = 'none';
-            const resultBox = document.getElementById(`${type}Result`);
-            resultBox.style.display = 'block';
-
-            document.getElementById(`${type}ScoreText`).innerText = score;
-            
-            let feedback = "";
-            if (score >= 85) feedback = "Sangat Baik! Pemahaman konsep moral PAI Anda sangat tinggi!";
-            else if (score >= 70) feedback = "Baik! Pertahankan dan tingkatkan terus belajarnya.";
-            else feedback = "Perlu Belajar Lagi. Pelajari kembali materi interaktif di atas.";
-
-            document.getElementById(`${type}Feedback`).innerText = feedback;
-
-            if (score >= 70) {
-                playAudio('correct');
-                triggerConfetti();
-            } else {
-                playAudio('wrong');
-            }
-
-            // Update Progress
-            if (type === 'latihan') appState.progress.latihanDone = true;
-            if (type === 'evaluasi') appState.progress.evaluasiDone = true;
-            updateGlobalProgress();
         }
-
-        function resetQuiz(type) {
-            playAudio('click');
-            const questions = type === 'latihan' ? latihanQuestions : evaluasiQuestions;
-            appState[type].answers = new Array(questions.length).fill(null);
-
-            document.getElementById(`${type}Result`).style.display = 'none';
-            document.getElementById(`${type}Container`).style.display = 'block';
-
-            renderQuizQuestion(type, 0);
-        }
-
-        /* --------------------------------------------------------------------------
-         * CONFETTI CANVAS EFFECT
-         * -------------------------------------------------------------------------- */
-        function triggerConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const pieces = [];
-            const colors = ['#0d9488', '#0284c7', '#f59e0b', '#ef4444', '#10b981'];
-
-            for (let i = 0; i < 100; i++) {
-                pieces.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    size: Math.random() * 8 + 4,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    speed: Math.random() * 3 + 2,
-                    angle: Math.random() * 360
-                });
-            }
-
-            let animationFrame;
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                pieces.forEach(p => {
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.fill();
-
-                    p.y += p.speed;
-                    if (p.y > canvas.height) p.y = -10;
-                });
-                animationFrame = requestAnimationFrame(draw);
-            }
-
-            draw();
-            setTimeout(() => {
-                cancelAnimationFrame(animationFrame);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }, 4000);
-        }
-
-        /* --------------------------------------------------------------------------
-         * UI UTILITIES (Toast, Modal, Scroll Top)
-         * -------------------------------------------------------------------------- */
-        function showToast(msg, type = "success") {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast`;
-            toast.style.borderLeftColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
-            toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-exclamation'}"></i> ${msg}`;
-
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function showModal(title, body) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalBody').innerText = body;
-            document.getElementById('customModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            playAudio('click');
-            document.getElementById('customModal').style.display = 'none';
-        }
-
-        function scrollToTop() {
-            playAudio('click');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scrollTopBtn');
-            if (window.scrollY > 300) btn.style.display = 'flex';
-            else btn.style.display = 'none';
-        });
-
-        /* Prevent Copying & Context Menu Protection */
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.ctrlKey && (e.key === 'c' || e.key === 'u' || e.key === 's')) {
-                e.preventDefault();
-                showToast("Fungsi penyalinan teks dinonaktifkan!", "danger");
-            }
-        });
-
-        /* --------------------------------------------------------------------------
-         * APPLICATION INITIALIZER
-         * -------------------------------------------------------------------------- */
-        function initApp() {
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-
-            document.getElementById('userDisplayName').innerText = appState.user.nama;
-
-            // Load Saved Progress if exists
-            const savedProgress = localStorage.getItem('pai_progress');
-            if (savedProgress) {
-                appState.progress = JSON.parse(savedProgress);
-                updateGlobalProgress();
-            }
-
-            switchView('beranda');
-        }
-
-        // Auto Login Check on Page Load
-        window.addEventListener('DOMContentLoaded', () => {
-            // Restore theme preference
-            const savedTheme = localStorage.getItem('pai_theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            document.getElementById('themeIcon').className = savedTheme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
-
-            // Check Login User Session
-            const savedUser = localStorage.getItem('pai_user');
-            if (savedUser) {
-                appState.user = JSON.parse(savedUser);
-                initApp();
-            }
-        });
     </script>
 </body>
 </html>
